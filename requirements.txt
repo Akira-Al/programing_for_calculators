@@ -1,0 +1,6 @@
+janome
+numpy
+matplotlib
+pandas
+scipy
+scikit-learn
