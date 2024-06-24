@@ -26,12 +26,14 @@ def test_load_dictionary2():
     '''
     input_file = os.path.join(project_root_path, 'tests', 'test_load_dictionary_files', 'test_dictionary2.txt')
     expected_output = {
-        'あがく': [(-1, ['あがく'], '経験')], 
-        'あきらめる': [(-1, ['あきらめる'], '経験')], 
-        'あきる': [(-1, ['あきる'], '経験')], 
-        'あきれる': [(-1, ['あきれる'], '経験'), (-1, ['あきれる', 'た'], '経験')]
+        'あがく': [(['あがく'], -1, '経験')], 
+        'あきらめる': [(['あきらめる'], -1, '経験')], 
+        'あきる': [(['あきる'], -1, '経験')], 
+        'あきれる': [(['あきれる'], -1, '経験'), (['あきれる', 'た'], -1, '経験')]
     }
     assert dictionary_loader.load_dict2(input_file) == expected_output
+    
+print(test_load_dictionary2())
 def test_load_PnJa():
     '''
     dictionary_loaderモジュール内のload_PnJa関数のテスト

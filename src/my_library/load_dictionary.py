@@ -59,7 +59,7 @@ def load_dict2(dict2):
         Examples:
             >>> d2 = load_dict2('../../data/dictionary2.txt')
             >>> print(d2['あきれる'])
-            [(-1, ['あきれる'], '経験'), (-1, ['あきれる', 'た'], '経験'), (-1, ['あきれる', 'て', 'もの', 'が', '言える', 'ない'], '評価')]
+            [(['あきれる'], -1, '経験'), (['あきれる', 'た'], -1, '経験'), (['あきれる', 'て', 'もの', 'が', '言える', 'ない'], -1, '評価')]
     '''
     reference2_df = pd.read_csv(dict2, sep='\t', header=None) # TSVファイルをデータフレームに変換
     reference2_df.columns = ['polar', 'text'] # 列名を指定
@@ -70,9 +70,9 @@ def load_dict2(dict2):
     for row in reference2_df.values:
         tokens = list(str(row[1]).split()) # テキストをトークンに分割
         if tokens[0] in reference2_dict:
-            reference2_dict[tokens[0]].append((row[2], tokens, row[3])) # 辞書に追加
+            reference2_dict[tokens[0]].append((tokens, row[2], row[3])) # 辞書に追加
         else:
-            reference2_dict[tokens[0]] = [(row[2], tokens, row[3])] # 新しいkeyを作成
+            reference2_dict[tokens[0]] = [(tokens, row[2], row[3])] # 新しいkeyを作成
     return reference2_dict
 
 def load_PnJa(PnJa):
