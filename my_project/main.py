@@ -9,4 +9,4 @@
 # some_library.good_class.good_func(my_good_instance)
 
 
-from .my_library import load_dictionary
+from .lib import load_dictionary
