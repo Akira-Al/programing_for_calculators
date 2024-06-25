@@ -2,6 +2,10 @@ from janome.tokenizer import Tokenizer
 import dataclasses
 from enum import Enum
 import abc
+import re
+import jaconv
+
+KATAKANA_PAT = re.compile(r"[\u30A1-\u30FF]+")
 
 
 def partial_match(tokens: list, reference: list) -> bool:
@@ -11,6 +15,10 @@ def partial_match(tokens: list, reference: list) -> bool:
         if tokens[i] != reference[i]:
             return False
     return True
+
+
+def is_katakana(s: str) -> bool:
+    return KATAKANA_PAT.fullmatch(s) is not None
 
 
 class MatchType(Enum):
@@ -95,7 +103,13 @@ class PolarEstimator:
                 case MatchType.PARTIAL:
                     pending.append([token.base_form])
                 case MatchType.NONE:
-                    pass
+                    if is_katakana(token.base_form):
+                        hira_token = jaconv.kata2hira(token.base_form)
+                        res = self.dict2.query([hira_token])
+                        if res.match_type == MatchType.FULL:
+                            if verbose:
+                                print("[dict2] ", [hira_token], res.score)
+                            score += res.score
 
             drop_list = []
             for i, tokens in enumerate(pending):
