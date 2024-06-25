@@ -19,6 +19,7 @@ def token_to_polarity(token, dict1, dict2):
         return ans
 
     # dict2を検索
+    partial_scores = []
     if token in dict2:
         for record in dict2[token]:
             if len(record[0]) == 1 and token in record[0]: 
@@ -26,5 +27,8 @@ def token_to_polarity(token, dict1, dict2):
                 break
             elif len(record[0]) > 1 and token in record[0]:
                 ans = ["partial", 0]
+                partial_scores.append(record[1])
+    if ans[0] == "partial":
+        ans[1] = sum(partial_scores) / len(partial_scores)
     return ans
 
