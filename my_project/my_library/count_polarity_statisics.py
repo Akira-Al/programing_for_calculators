@@ -21,7 +21,7 @@ def token_to_polarity(token, dict1, dict2):
     # dict2を検索
     if token in dict2:
         for record in dict2[token]:
-            if token == record[0]:
+            if len(record[0]) == 1 and token in record[0]: 
                 ans = ["full", record[1]]
                 break
             elif len(record[0]) > 1 and token in record[0]:
