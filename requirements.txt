@@ -5,3 +5,8 @@ pandas
 scipy
 scikit-learn
 jupyterlab
+
+# development
+flake8
+black
+flake8-bugbear
