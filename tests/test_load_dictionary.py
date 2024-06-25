@@ -1,5 +1,5 @@
 import unittest
-from my_project.my_library import load_dictionary
+from auto_polar.lib import load_dictionary
 from pathlib import Path
 
 
