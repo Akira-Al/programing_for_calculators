@@ -1,6 +1,7 @@
 import pandas as pd
 from janome.tokenizer import Tokenizer
 
+
 def polar2score(p):
     """
     dictionary1.txtの極性をスコアに変換する
@@ -55,6 +56,7 @@ def load_dict1(dict1):
     }  # 辞書に変換
     return reference1_dict
 
+tkn = Tokenizer() # インスタンス作成
 
 def load_dict2(dict2):
     """
@@ -84,7 +86,7 @@ def load_dict2(dict2):
     reference2_dict = {}  # 辞書を作成
     for row in reference2_df.values:
         text = str(row[1]).replace(" ", "")
-        words = Tokenizer().tokenize(text)
+        words = tkn.tokenize(text)
         tokens = []
         for s in words:
             tokens.append(str(s.base_form))
