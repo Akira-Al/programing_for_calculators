@@ -8,7 +8,7 @@ def token_to_polarity(token, dict1, dict2):
             dict1: load_dictionary.pyで作成した辞書1
             dict2: load_dictionary.pyで作成した辞書2
         Returns:
-            polarity: [一致度(string), 極性値(int)]の配列
+            polarity: [一致度(string), 極性値(float?)]の配列
                 一致度：full(完全一致) / partial(部分一致) or none(不一致)
                 極性値：fullの場合+1/0/-1 partialの場合は部分一致した極性値の平均値 noneの場合は0
     """
