@@ -39,23 +39,13 @@ class PolarEstimator:
         pending = []
         for token in self.tokenizer.tokenize(text):
             debug_text+=str(token)+"\n"
-            flag=False
-            if(token.base_form =="落ち込む"):
-                print("||||||||||||")
-                flag=True
             if token.base_form in self.dict2:
-                if flag:
-                    print("#####")
-                    print(token)
                 is_pending = True
 
             if is_pending:
                 pending.append(token.base_form)
 
                 settled = True
-                if(flag):
-                    print(pending)
-                    print(self.dict2[pending[0]])
                 for record in self.dict2[pending[0]]:
                     debug_text+="[dict2]found "+str(record)+"\n"
                     if pending == record[0]:
