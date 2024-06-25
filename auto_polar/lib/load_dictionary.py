@@ -1,5 +1,5 @@
 import pandas as pd
-
+from janome.tokenizer import Tokenizer
 
 def polar2score(p):
     """
@@ -83,13 +83,16 @@ def load_dict2(dict2):
     )  # 極性をスコアに変換
     reference2_dict = {}  # 辞書を作成
     for row in reference2_df.values:
-        tokens = list(str(row[1]).split())  # テキストをトークンに分割
+        text = str(row[1]).replace(" ", "")
+        words = Tokenizer().tokenize(text)
+        tokens = []
+        for s in words:
+            tokens.append(str(s.base_form))
         if tokens[0] in reference2_dict:
             reference2_dict[tokens[0]].append((tokens, row[2], row[3]))  # 辞書に追加
         else:
             reference2_dict[tokens[0]] = [(tokens, row[2], row[3])]  # 新しいkeyを作成
     return reference2_dict
-
 
 def load_PnJa(PnJa):
     """
