@@ -10,7 +10,7 @@ def token_to_polarity(token, dict1, dict2):
         Returns:
             polarity: [一致度(string), 極性値(int)]の配列
                 一致度：full(完全一致) / partial(部分一致) or none(不一致)
-                極性値：full(完全一致)の場合のみp->+1 / e->0 / n->-1 (それ以外は常に0)
+                極性値：fullの場合+1/0/-1 partialの場合は部分一致した極性値の平均値 noneの場合は0
     """
     ans = ["none", 0]
     # dict1を検索
