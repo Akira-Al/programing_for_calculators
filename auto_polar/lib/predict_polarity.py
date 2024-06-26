@@ -194,15 +194,14 @@ class PolarEstimator:
             "でも",
             "そのくせ",
         ]
-        conjunction_type = ["接続詞", "助詞"]
+        conjunction_type = "接続"
         score = 0
         for token in self.tokenizer.tokenize(text):
-            if get_part_of_speech(token) == conjunction_type[0] or (
-                get_part_of_speech(token) in conjunction_type
-                and token.surface in contradictory_list
-            ):
+            if verbose:
+                print(token)
+            if conjunction_type in token.part_of_speech :
                 if token.base_form in contradictory_list:
-                    score_e3 = self.estimate_v3(buf, verbose=verbose)
+                    score_e3 = self.estimate_v2(buf, verbose=verbose)
                     if verbose:
                         print(
                             '[e_v4]"'
@@ -216,7 +215,7 @@ class PolarEstimator:
                         )
                     score += -1 * score_e3
                 else:
-                    score_e3 = self.estimate_v3(buf, verbose=verbose)
+                    score_e3 = self.estimate_v2(buf, verbose=verbose)
                     if verbose:
                         print(
                             '[e_v4]"'
@@ -230,9 +229,10 @@ class PolarEstimator:
                         )
                     score += score_e3
                 buf = ""
+                continue
             buf += token.surface
         if len(buf) != 0:
-            score_e3 = self.estimate_v3(buf, verbose=verbose)
+            score_e3 = self.estimate_v2(buf, verbose=verbose)
             if verbose:
                 print('[e_v4]"' + buf + '":' + str(score_e3))
             score += score_e3
