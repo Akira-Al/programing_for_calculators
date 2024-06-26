@@ -108,6 +108,7 @@ class PolarEstimator:
             if self.negative_auxiliary_verb_checker(token):
                 if prev_score[1]:
                     score += -1 * prev_score[0] * 2
+                    prev_score = [0, False]
                     continue
             prev_score = [0, False]
 
