@@ -56,7 +56,9 @@ def load_dict1(dict1):
     }  # 辞書に変換
     return reference1_dict
 
-tkn = Tokenizer() # インスタンス作成
+
+tkn = Tokenizer()  # インスタンス作成
+
 
 def load_dict2(dict2):
     """
@@ -95,6 +97,7 @@ def load_dict2(dict2):
         else:
             reference2_dict[tokens[0]] = [(tokens, row[2], row[3])]  # 新しいkeyを作成
     return reference2_dict
+
 
 def load_PnJa(PnJa):
     """
