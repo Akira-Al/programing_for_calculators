@@ -213,7 +213,7 @@ class PolarEstimator:
                             + token.surface
                             + '":-1'
                         )
-                    score += -1 * score_e3
+                    score += -0.5 * score_e3
                 else:
                     score_e3 = self.estimate_v2(buf, verbose=verbose)
                     if verbose:
@@ -227,7 +227,7 @@ class PolarEstimator:
                             + token.surface
                             + '":1'
                         )
-                    score += score_e3
+                    score += 0.5 * score_e3
                 buf = ""
                 continue
             buf += token.surface
