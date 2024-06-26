@@ -212,7 +212,7 @@ class PolarEstimator:
                             + "*"
                             + '"'
                             + token.surface
-                            + '":-1'
+                            + '":-0.5'
                         )
                     score += -0.5 * score_e3
                 else:
@@ -226,7 +226,7 @@ class PolarEstimator:
                             + "*"
                             + '"'
                             + token.surface
-                            + '":1'
+                            + '":0.5'
                         )
                     score += 0.5 * score_e3
                 buf = ""
