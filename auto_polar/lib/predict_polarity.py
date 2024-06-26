@@ -202,7 +202,7 @@ class PolarEstimator:
                 and token.surface in contradictory_list
             ):
                 if token.base_form in contradictory_list:
-                    score_e3 = self.estimate_v3(buf, verbose=verbose)
+                    score_e3 = self.estimate_v2(buf, verbose=verbose)
                     if verbose:
                         print(
                             '[e_v4]"'
@@ -214,9 +214,9 @@ class PolarEstimator:
                             + token.surface
                             + '":-1'
                         )
-                    score += -1 * score_e3
+                    score += -0.5 * score_e3
                 else:
-                    score_e3 = self.estimate_v3(buf, verbose=verbose)
+                    score_e3 = self.estimate_v2(buf, verbose=verbose)
                     if verbose:
                         print(
                             '[e_v4]"'
@@ -228,11 +228,12 @@ class PolarEstimator:
                             + token.surface
                             + '":1'
                         )
-                    score += score_e3
+                    score += 0.5 * score_e3
                 buf = ""
+                continue
             buf += token.surface
         if len(buf) != 0:
-            score_e3 = self.estimate_v3(buf, verbose=verbose)
+            score_e3 = self.estimate_v2(buf, verbose=verbose)
             if verbose:
                 print('[e_v4]"' + buf + '":' + str(score_e3))
             score += score_e3
