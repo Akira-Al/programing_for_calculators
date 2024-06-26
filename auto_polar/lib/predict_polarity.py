@@ -21,6 +21,11 @@ def is_katakana(s: str) -> bool:
     return KATAKANA_PAT.fullmatch(s) is not None
 
 
+def get_part_of_speech(token) -> str:
+    # Tokenizerの中身でtokenがどのように定義されているかあとで確認して書いておく
+    return token.part_of_speech.split(",")[0]
+
+
 class MatchType(Enum):
     FULL = 1
     PARTIAL = 2
@@ -126,4 +131,109 @@ class PolarEstimator:
                         drop_list.append(i)
             for i in drop_list:
                 pending.pop(i)
+        return score
+
+    def estimate_v3(self, text: str, *, verbose=False) -> int:
+        buf = ""
+        denial_list = ["ない", "ぬ", "ん"]
+        denial_type = "助動詞"
+        score = 0
+        for token in self.tokenizer.tokenize(text):
+            if (token.base_form in denial_list) and get_part_of_speech(
+                token
+            ) == denial_type:
+                score_e2 = self.estimate_v2(buf, verbose=verbose)
+                if verbose:
+                    print(
+                        '[e_v3]"'
+                        + buf
+                        + '":'
+                        + str(score_e2)
+                        + "*"
+                        + '"'
+                        + token.surface
+                        + '":-1'
+                    )
+                score += -1 * score_e2
+                buf = ""
+            buf += token.surface
+        if len(buf) != 0:
+            score_e2 = self.estimate_v2(buf, verbose=verbose)
+            if verbose:
+                print('[e_v3]"' + buf + '":' + str(score_e2))
+            score += score_e2
+        return score
+
+    def estimate_v4(self, text: str, *, verbose=False) -> int:
+        buf = ""
+        contradictory_list = [
+            "しかし",
+            "けど",
+            "ただ",
+            "だが",
+            "しかしながら",
+            "けれど",
+            "けれども",
+            "だけど",
+            "だけども",
+            "そうではあるが",
+            "それでも",
+            "でも",
+            "ではあるが",
+            "にもかかわらず",
+            "ところが",
+            "ですが",
+            "ものの",
+            "しかるに",
+            "とはいうものの",
+            "のに",
+            "なのに",
+            "それなのに",
+            "とはいえ",
+            "そうはいうものの",
+            "でも",
+            "そのくせ",
+        ]
+        conjunction_type = ["接続詞", "助詞"]
+        score = 0
+        for token in self.tokenizer.tokenize(text):
+            if get_part_of_speech(token) == conjunction_type[0] or (
+                get_part_of_speech(token) in conjunction_type
+                and token.surface in contradictory_list
+            ):
+                if token.base_form in contradictory_list:
+                    score_e3 = self.estimate_v3(buf, verbose=verbose)
+                    if verbose:
+                        print(
+                            '[e_v4]"'
+                            + buf
+                            + '":'
+                            + str(score_e3)
+                            + "*"
+                            + '"'
+                            + token.surface
+                            + '":-1'
+                        )
+                    score += -1 * score_e3
+                else:
+                    score_e3 = self.estimate_v3(buf, verbose=verbose)
+                    if verbose:
+                        print(
+                            '[e_v4]"'
+                            + buf
+                            + '":'
+                            + str(score_e3)
+                            + "*"
+                            + '"'
+                            + token.surface
+                            + '":1'
+                        )
+                    score += score_e3
+                buf = ""
+            buf += token.surface
+        if len(buf) != 0:
+            score_e3 = self.estimate_v3(buf, verbose=verbose)
+            if verbose:
+                print('[e_v4]"' + buf + '":' + str(score_e3))
+            score += score_e3
         return score
