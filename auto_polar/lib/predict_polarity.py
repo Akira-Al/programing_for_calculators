@@ -79,6 +79,11 @@ class PolarEstimator:
         self.dict2 = dict2
         self.tokenizer = Tokenizer()
 
+    def negative_auxiliary_verb_checker(self, token) -> bool:
+        denial_list = ["ない", "ぬ", "ん"]
+        denial_type = "助動詞"
+        return token.base_form in denial_list and get_part_of_speech(token) == denial_type
+
     def estimate_v1(self, text: str, *, verbose=False) -> int:
         if verbose:
             print("text:", text)
@@ -93,11 +98,18 @@ class PolarEstimator:
 
     def estimate_v2(self, text: str, *, verbose=False) -> int:
         score = self.estimate_v1(text, verbose=verbose)
+        prev_score = [0, False]
 
         pending = []
         for token in self.tokenizer.tokenize(text):
             for tokens in pending:
                 tokens.append(token.base_form)
+
+            if self.negative_auxiliary_verb_checker(token):
+                if prev_score[1]:
+                    score += -1 * prev_score[0] * 2
+                prev_score = [0, False]
+                continue
 
             res = self.dict2.query([token.base_form])
             match res.match_type:
@@ -105,6 +117,7 @@ class PolarEstimator:
                     if verbose:
                         print("[dict2] ", [token.base_form], res.score)
                     score += res.score
+                    prev_score = [res.score, True]
                 case MatchType.PARTIAL:
                     pending.append([token.base_form])
                 case MatchType.NONE:
@@ -115,6 +128,7 @@ class PolarEstimator:
                             if verbose:
                                 print("[dict2] ", [hira_token], res.score)
                             score += res.score
+                            prev_score = [res.score, True]
 
             drop_list = []
             for i, tokens in enumerate(pending):
@@ -124,6 +138,7 @@ class PolarEstimator:
                         if verbose:
                             print("[dict2] ", tokens, res.score)
                         score += res.score
+                        prev_score = [res.score, True]
                         drop_list.append(i)
                     case MatchType.PARTIAL:
                         pass
