@@ -1,4 +1,5 @@
 janome
+jaconv
 numpy
 matplotlib
 pandas

@@ -5,3 +5,12 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "auto_polar"
 version = "0.1.0"
+
+dependencies = [
+    "pandas",
+    "janome",
+    "jaconv"
+]
+
+[tool.setuptools]
+py-modules = ["auto_polar"]
